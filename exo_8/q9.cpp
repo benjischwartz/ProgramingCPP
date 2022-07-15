@@ -1,4 +1,11 @@
 #include "std_lib_facilities.h"
+#include<iostream>
+ 
+// for <streamsize>
+#include<ios>    
+ 
+// for numeric_limits
+#include<limits>
 
 // Given two vector<double>'s price and weight compute a value that
 // is the sum of all price[i]*weight[i]. 
@@ -16,7 +23,7 @@ int main() {
     double price = 0;
     while (cin >> price) {
         prices.push_back(price);
-    } cin.ignore();
+    } cin.ignore(numeric_limits<streamsize>::max(),'\n'); 
 
     vector<double> weights;
     cout << "Enter weights. Terminate with ';'\n";
