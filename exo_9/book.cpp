@@ -2,29 +2,40 @@
 #include "Book.h"
 
 
-ISBN::ISBN(int _n0, int _n1, int _n2, char _x) {
-    n0 = _n0;
-    n1 = _n1;
-    n2 = _n2;
-    x = _x;
-}
-
-ISBN::ISBN() {
-    n0 = 0;
-    n1 = 0;
-    n2 = 0;
-    x = ‘0’;
-}
-
-Book::Book(ISBN _isbn, string _title, string _author, Date _copyright_date)
-    :isbn{_isbn}, title{_title}, author{_author}, copyright_date{_copyright_date}
+Book::Book(string _isbn, string _title, string _author, Date _copyright_date)
+    :isbn{_isbn}, title{_title}, author{_author}, copyright_date{_copyright_date}, checked_in{true} {}
 
 Book::Book() {
-    isbn = ISBN();
+    isbn = "noISBN";
     title = "noTitle";
     author = "noAuthor";
     copyright_date = Date();
-    checked_out = false;
+    checked_in = false;
+}
+
+// simple output operator for Book
+ostream& operator<<(ostream& os, const Book& b) 
+{
+    return os << '(' << b.get_ISBN()
+              << ',' << b.get_title()
+              << ',' << b.get_author()
+              << ',' << b.get_date() << ')';
+}
+
+// simple input operator for Book
+istream& operator>>(istream& is, Book& bb)
+{
+    string i, t, a;
+    Date d;
+    char ch1, ch2, ch3, ch4, ch5;
+    is>>ch1>>i>>ch2>>t>>ch3>>a>>ch4>>d>>ch5;
+    if (!is) return is;
+    if (ch1 != '(' || ch2 != ',' || ch3 != ',' || ch4 != ',' || ch5 != ')') {
+        is.clear(ios_base::failbit);
+        return is;
+    }
+    bb = Book{i,t,a,d};
+    return is;
 }
 
 void Book::check_in()
@@ -34,31 +45,16 @@ void Book::check_in()
 
 void Book::check_out()
 {
-    check_in = false;
+    checked_in = false;
 }
 
-bool Book::checked_in()
-{
-    return checked_in;
-}
+int main() {
+    // Create a date
+    Date test_date = Date{2001, 10, 12};
+    
+    // Create a Book
+    Book test_book = Book{"DummyISBN", "Book Title", "Benji Schwartz", test_date};
 
-string Book::get_ISBN() 
-{
-    string isbn = to_string(isbn.n0) + to_string(isbn.n1) + to_string(isbn.n2) + isbn.x;
-    return isbn;
-}
-
-string Book::get_title() 
-{
-    return title;
-}
-
-string Book::get_author() 
-{
-    return author;
-}
-
-int Book::get_date() 
-{
-    return copyright_date;
+    // Print out Book to terminal
+    cout << "Book Summary: "<< test_book << endl;
 }
